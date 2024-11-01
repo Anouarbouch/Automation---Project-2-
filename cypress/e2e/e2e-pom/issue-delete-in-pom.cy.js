@@ -3,23 +3,36 @@
  */
 import IssueModal from "../../pages/IssueModal";
 
-describe('Issue delete', () => {
+describe("Issue delete", () => {
   beforeEach(() => {
-    cy.visit('/');
-    cy.url().should('eq', `${Cypress.env('baseUrl')}project/board`).then((url) => {
-    //open issue detail modal with title from line 16  
-    cy.contains(issueTitle).click();
-    });
+    cy.visit("/");
+    cy.url()
+      .wait(30000)
+      .should("eq", `${Cypress.env("baseUrl")}project/board/`)
+      .then((url) => {
+        //open issue detail modal with title from line 16
+        cy.contains(issueTitle).click();
+      });
   });
 
-  //issue title, that we are testing with, saved into variable
-  const issueTitle = 'This is an issue of type: Task.';
+  const issueTitle = "This is an issue of type: Task.";
 
-  it('Should delete issue successfully', () => {
-    //add steps to delete issue
+  it("Should delete issue successfully", () => {
+    const Numberissues = 3;
+    IssueModal.clickDeleteButton();
+    IssueModal.confirmDeletion();
+    IssueModal.ensureIssueIsNotVisibleOnBoard(issueTitle);
+    // function to count issues was added in IssueModal page
+    IssueModal.BacklogIssueNumbervalidation(Numberissues);
   });
 
-  it('Should cancel deletion process successfully', () => {
-    //add steps to start deletion proces but cancel it
+  it("Should cancel deletion process successfully", () => {
+    const Numberissues = 4;
+    IssueModal.clickDeleteButton();
+    IssueModal.cancelDeletion();
+    IssueModal.closeDetailModal();
+    IssueModal.ensureIssueIsVisibleOnBoard(issueTitle);
+    // function to count issues was added in IssueModal page
+    IssueModal.BacklogIssueNumbervalidation(Numberissues);
   });
 });
